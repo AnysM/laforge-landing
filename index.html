@@ -414,6 +414,45 @@ footer {
 .footer-name { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.2em; color:#1E1E1E; text-transform:uppercase; }
 .footer-r { font-family:'DM Mono',monospace; font-size:7px; color:#141414; }
 
+
+/* ─── COMPTEUR PIONNIERS ─── */
+.pioneer-block {
+  margin-top:32px;
+  opacity:0; transform:translateY(8px); transition:all .6s ease .7s;
+}
+.pioneer-block.vis { opacity:1; transform:none; }
+.pioneer-bar-wrap {
+  display:flex; align-items:center; gap:16px; margin-bottom:10px;
+}
+.pioneer-bar-bg {
+  flex:1; height:3px; background:#111; border-radius:2px; overflow:hidden;
+  max-width:260px;
+}
+.pioneer-bar-fill {
+  height:100%; border-radius:2px;
+  background:linear-gradient(to right,#FFB84D,#FF8C42);
+  transition:width 1s cubic-bezier(.22,1,.36,1);
+  width:0%;
+}
+.pioneer-count {
+  font-family:'DM Mono',monospace; font-size:11px;
+  color:#FFB84D; letter-spacing:.1em; white-space:nowrap;
+}
+.pioneer-note {
+  font-family:'DM Mono',monospace; font-size:8px;
+  letter-spacing:.15em; color:#333; text-transform:uppercase; line-height:1.6;
+}
+.pioneer-note strong { color:#555; }
+
+/* Version CTA (centrée) */
+.pioneer-block.center {
+  display:flex; flex-direction:column; align-items:center;
+  margin-top:28px;
+}
+.pioneer-block.center .pioneer-bar-wrap { justify-content:center; }
+.pioneer-block.center .pioneer-bar-bg { max-width:320px; }
+.pioneer-block.center .pioneer-note { text-align:center; }
+
 /* ─── FADE ─── */
 .fi { opacity:0; transform:translateY(18px); transition:all .7s ease; }
 .fi.vis { opacity:1; transform:none; }
@@ -480,6 +519,16 @@ footer {
     <div class="hero-btns" id="hb">
       <a href="https://la-forge.neoqii.com" class="btn-primary">Rejoindre la forge</a>
       <a href="#screens" class="btn-ghost">Voir l'application</a>
+    </div>
+
+    <div class="pioneer-block" id="pc-hero">
+      <div class="pioneer-bar-wrap">
+        <div class="pioneer-bar-bg"><div class="pioneer-bar-fill" id="pbar-hero"></div></div>
+        <span class="pioneer-count"><span id="pcount-hero">...</span> / 100 pionniers</span>
+      </div>
+      <div class="pioneer-note">
+        <strong>Gratuit pour les 100 premiers</strong> · Badge Fondateur inclus · Ensuite payant
+      </div>
     </div>
   </div>
   <div class="hero-phone" id="hph">
@@ -826,6 +875,16 @@ footer {
   <h2 class="s-h">Pret a avancer<br><span class="gold">pour de vrai ?</span></h2>
   <p class="s-p">Decouvre tes archetypes, pose ta quete, et rejoins des hommes qui font pareil chaque jour.</p>
   <a href="https://la-forge.neoqii.com" class="btn-primary">Commencer maintenant</a>
+
+  <div class="pioneer-block center fi" id="pc-cta">
+    <div class="pioneer-bar-wrap">
+      <div class="pioneer-bar-bg"><div class="pioneer-bar-fill" id="pbar-cta"></div></div>
+      <span class="pioneer-count"><span id="pcount-cta">...</span> / 100 pionniers</span>
+    </div>
+    <div class="pioneer-note">
+      <strong>Gratuit pour les 100 premiers</strong> · Badge Fondateur inclus · Ensuite payant
+    </div>
+  </div>
 </div>
 
 <!-- FOOTER -->
@@ -839,7 +898,7 @@ footer {
 
 <script>
 window.addEventListener("DOMContentLoaded", () => {
-  ["hh1","hp","hb","hph"].forEach((id,i) => {
+  ["hh1","hp","hb","hph","pc-hero"].forEach((id,i) => {
     setTimeout(() => document.getElementById(id)?.classList.add("vis"), i*120);
   });
 });
@@ -866,6 +925,52 @@ new IntersectionObserver(entries => {
     }
   });
 }, {threshold:0.4}).observe(document.querySelector(".stats"));
+
+
+// COMPTEUR PIONNIERS
+async function loadPioneerCount() {
+  const SUPABASE_URL = 'https://pfayxrzgmmrfvuogqhmk.supabase.co';
+  const ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBmYXl4cnpnbW1yZnZ1b2dxaG1rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzOTE2MTgsImV4cCI6MjA4ODk2NzYxOH0.N65eU84MqRdLRWIkCBB7KVzvAiwgv-SJHtpvBOyYWtA';
+  const MAX = 100;
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/profiles?select=id`, {
+      headers: {
+        'apikey': ANON,
+        'Authorization': `Bearer ${ANON}`,
+        'Prefer': 'count=exact',
+        'Range': '0-0'
+      }
+    });
+    const range = res.headers.get('Content-Range'); // ex: "0-0/47"
+    const count = range ? parseInt(range.split('/')[1]) : null;
+    if (!count && count !== 0) return;
+
+    const pct = Math.min((count / MAX) * 100, 100);
+    const remaining = Math.max(MAX - count, 0);
+
+    ['hero','cta'].forEach(id => {
+      const countEl = document.getElementById(`pcount-${id}`);
+      const barEl = document.getElementById(`pbar-${id}`);
+      if (countEl) countEl.textContent = count;
+      if (barEl) setTimeout(() => barEl.style.width = pct + '%', 300);
+    });
+
+    // Si complet, changer le message
+    if (remaining === 0) {
+      document.querySelectorAll('.pioneer-note').forEach(el => {
+        el.innerHTML = '<strong>Les 100 places pionniers sont prises</strong> · Acces payant actif';
+      });
+    }
+  } catch(e) {
+    // Silencieux si Supabase inaccessible
+    ['hero','cta'].forEach(id => {
+      const el = document.getElementById(`pcount-${id}`);
+      if (el) el.textContent = '—';
+    });
+  }
+}
+loadPioneerCount();
 
 function toggleFaq(btn) {
   const item = btn.parentElement;
