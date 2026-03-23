@@ -412,9 +412,9 @@ nav {
     <div class="pioneer" id="pio">
       <div class="p-row">
         <div class="p-bar"><div class="p-fill" id="pf1"></div></div>
-        <span class="p-count"><span id="pc1">—</span> / 100</span>
+        <span class="p-count"><span id="pc1">—</span> / 88</span>
       </div>
-      <div class="p-note"><strong>Gratuit pour les 100 premiers</strong> · Badge Fondateur inclus · Ensuite payant</div>
+      <div class="p-note"><strong>Gratuit pour les 88 premiers</strong> · Badge Fondateur inclus · Ensuite payant</div>
     </div>
   </div>
   <div class="hphone" id="hph">
@@ -581,7 +581,7 @@ nav {
     <div class="label">Questions</div>
     <h2 class="stitle">Ce qu'on nous demande<br>le plus souvent.</h2>
     <div class="faqlist">
-      <div class="faqitem"><button class="faqq" onclick="faq(this)"><span>C'est gratuit ?</span><span class="faqplus">+</span></button><div class="faqa">Oui, entierement gratuit pour les 100 premiers inscrits. Apres ce cap, l'acces sera payant. Si tu lis cette page maintenant, tu es probablement encore a temps.</div></div>
+      <div class="faqitem"><button class="faqq" onclick="faq(this)"><span>C'est gratuit ?</span><span class="faqplus">+</span></button><div class="faqa">Oui, entierement gratuit pour les 88 premiers inscrits. Apres ce cap, l'acces sera payant. Si tu lis cette page maintenant, tu es probablement encore a temps.</div></div>
       <div class="faqitem"><button class="faqq" onclick="faq(this)"><span>C'est quoi le Chaudron ?</span><span class="faqplus">+</span></button><div class="faqa">Un rendez-vous hebdomadaire, le dimanche a 20h, en live. Un cercle de parole : on se synchronise, on se motive, on s'active ensemble. Pas un webinaire. Un espace ou les hommes de la Tribu se retrouvent.</div></div>
       <div class="faqitem"><button class="faqq" onclick="faq(this)"><span>Il faut avoir fait le parcours IN CARNE pour rejoindre ?</span><span class="faqplus">+</span></button><div class="faqa">Non. Tu peux rejoindre directement depuis cette page. Le quiz de decouverte de tes archetypes est integre a l'onboarding. Pas besoin d'avoir fait quoi que ce soit avant.</div></div>
       <div class="faqitem"><button class="faqq" onclick="faq(this)"><span>Combien de temps ca prend par jour ?</span><span class="faqplus">+</span></button><div class="faqa">Deux minutes pour cocher tes routines. Le reste depend de toi. Le timer sert pour ta meditation, ton entrainement, ta creation. Tu choisis la duree. L'app s'adapte a ta vie.</div></div>
@@ -600,9 +600,9 @@ nav {
     <div class="p-cta">
       <div class="p-row" style="justify-content:center;">
         <div class="p-bar-cta"><div class="p-fill" id="pf2"></div></div>
-        <span class="p-count"><span id="pc2">—</span> / 100</span>
+        <span class="p-count"><span id="pc2">—</span> / 88</span>
       </div>
-      <div class="p-note" style="text-align:center;"><strong>Gratuit pour les 100 premiers</strong> · Badge Fondateur inclus · Ensuite payant</div>
+      <div class="p-note" style="text-align:center;"><strong>Gratuit pour les 88 premiers</strong> · Badge Fondateur inclus · Ensuite payant</div>
     </div>
   </div>
 </div>
@@ -657,10 +657,10 @@ function faq(btn) {
     const res=await fetch(`${U}/rest/v1/profiles?select=id`,{headers:{apikey:K,Authorization:`Bearer ${K}`,Prefer:"count=exact",Range:"0-0"}});
     const cr=res.headers.get("Content-Range"); const n=cr?parseInt(cr.split("/")[1]):null;
     if(n===null) return;
-    const pct=Math.min(n/100*100,100);
+    const pct=Math.min(n/88*100,100);
     ["pc1","pc2"].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=n;});
     setTimeout(()=>{["pf1","pf2"].forEach(id=>{const el=document.getElementById(id);if(el)el.style.width=pct+"%";});},800);
-    if(n>=100) document.querySelectorAll(".p-note").forEach(el=>{el.innerHTML="<strong>Les 100 places pionniers sont prises</strong> · Acces payant actif";});
+    if(n>=88) document.querySelectorAll(".p-note").forEach(el=>{el.innerHTML="<strong>Les 88 places pionniers sont prises</strong> · Acces payant actif";});
   } catch(e) {}
 })();
 </script>
