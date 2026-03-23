@@ -195,6 +195,40 @@ nav {
   max-width:680px;
 }
 
+
+/* ── PROSE FLOW ── */
+.prose-flow {
+  margin-top: 72px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  max-width: 780px;
+}
+.pf-line {
+  font-size: clamp(18px, 2.2vw, 24px);
+  color: #777;
+  line-height: 1.75;
+  font-weight: 300;
+}
+.pf-line strong {
+  color: #EEEEEE;
+  font-weight: 700;
+}
+.pf-line em {
+  color: #999;
+  font-style: normal;
+}
+.pf-mid {
+  font-size: clamp(17px, 2vw, 22px);
+  color: #666;
+}
+.pf-close {
+  font-size: clamp(18px, 2.2vw, 24px);
+  color: #888;
+  padding-top: 16px;
+  border-top: 1px solid #1E1E1E;
+}
+
 /* ── DIFF ── */
 .dgrid {
   display:grid; grid-template-columns:repeat(2,1fr);
@@ -435,7 +469,7 @@ nav {
 <div class="sec bg-a fade">
   <div class="wrap">
     <div class="label">Comprendre la forge</div>
-    <h2 class="stitle">Trois vérités.<br>Un seul chemin.</h2>
+    <h2 class="stitle">Ce qui fait<br>la différence.</h2>
     <div class="prose-block">
       <div class="prose-item">
         <div class="prose-h">Tu sais qui tu veux être.</div>
